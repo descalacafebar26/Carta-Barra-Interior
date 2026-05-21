@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>D'Escala · Carta para Imprimir</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #2a2a2a;
+    font-family: 'Cormorant Garamond', serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── PÁGINA A4 ── */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #111009;
+    color: #F2EAD8;
+    margin: 0 auto 12mm;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  /* Borde dorado exterior */
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 6mm;
+    border: 1.5px solid rgba(201,168,76,0.45);
+    pointer-events: none;
+    z-index: 10;
+  }
+  /* Borde fino interior */
+  .page::after {
+    content: '';
+    position: absolute;
+    inset: 8.5mm;
+    border: 0.5px solid rgba(201,168,76,0.2);
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* ── PORTADA (hoja 1) ── */
+  .cover {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 297mm;
+    text-align: center;
+    padding: 20mm;
+    background: #111009;
+    position: relative;
+  }
+  .cover-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 30%, rgba(201,168,76,0.1) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 80% 80%, rgba(140,42,42,0.07) 0%, transparent 50%);
+  }
+  .cover > * { position: relative; z-index: 1; }
+
+  .cover-lamp {
+    width: 60px;
+    height: auto;
+    margin-bottom: 12mm;
+    opacity: 0.85;
+  }
+  .cover-brand {
+    font-family: 'Cinzel', serif;
+    font-size: 52pt;
+    font-weight: 700;
+    color: #E8C97A;
+    letter-spacing: 0.15em;
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(201,168,76,0.4);
+  }
+  .cover-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16pt;
+    color: #C9A84C;
+    letter-spacing: 0.5em;
+    margin-top: 6mm;
+    font-style: italic;
+  }
+  .cover-rule {
+    width: 70mm;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #C9A84C, transparent);
+    margin: 8mm auto;
+  }
+  .cover-tagline {
+    font-family: 'Cinzel', serif;
+    font-size: 8.5pt;
+    letter-spacing: 0.35em;
+    color: rgba(201,168,76,0.6);
+    text-transform: uppercase;
+  }
+  .cover-skyline {
+    margin-top: 18mm;
+    font-size: 28pt;
+    color: rgba(201,168,76,0.25);
+    letter-spacing: 0.05em;
+  }
+  .cover-addr {
+    margin-top: 14mm;
+    font-size: 9pt;
+    letter-spacing: 0.2em;
+    color: rgba(242,234,216,0.4);
+    text-transform: uppercase;
+    line-height: 1.9;
+  }
+  .cover-addr strong { color: rgba(242,234,216,0.7); font-weight: 400; }
+
+  /* ── HOJAS DE CONTENIDO (2-6) ── */
+  .content-page {
+    padding: 14mm 16mm 12mm;
+    min-height: 297mm;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Cabecera de cada hoja */
+  .page-header {
+    display: flex;
+    align-items: center;
+    gap: 8mm;
+    padding-bottom: 5mm;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+    margin-bottom: 6mm;
+  }
+  .page-header-brand {
+    font-family: 'Cinzel', serif;
+    font-size: 13pt;
+    color: #C9A84C;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+  }
+  .page-header-dot { color: rgba(201,168,76,0.4); font-size: 8pt; }
+  .page-header-section {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11pt;
+    font-style: italic;
+    color: rgba(242,234,216,0.5);
+  }
+  .page-header-num {
+    margin-left: auto;
+    font-family: 'Cinzel', serif;
+    font-size: 8pt;
+    color: rgba(201,168,76,0.35);
+    letter-spacing: 0.15em;
+  }
+
+  /* Sección dentro de la hoja */
+  .menu-section { margin-bottom: 7mm; }
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 14pt;
+    font-weight: 700;
+    color: #E8C97A;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6mm;
+    margin-bottom: 4mm;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(201,168,76,0.5), transparent);
+  }
+  .section-title-icon {
+    font-size: 10pt;
+    color: rgba(201,168,76,0.5);
+  }
+
+  /* Categoría (subcategoría) */
+  .cat {
+    font-family: 'Cinzel', serif;
+    font-size: 7pt;
+    letter-spacing: 0.28em;
+    color: rgba(201,168,76,0.5);
+    text-transform: uppercase;
+    margin: 4mm 0 2.5mm;
+    padding-bottom: 1.5mm;
+    border-bottom: 0.5px solid rgba(201,168,76,0.15);
+  }
+
+  /* Item de menú */
+  .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 5mm;
+    padding: 2.2mm 0;
+    border-bottom: 0.5px solid rgba(255,255,255,0.05);
+  }
+  .item:last-child { border-bottom: none; }
+  .item-left { flex: 1; min-width: 0; }
+  .item-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 12.5pt;
+    color: #F2EAD8;
+    line-height: 1.25;
+    font-weight: 400;
+  }
+  .item-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8.5pt;
+    color: rgba(242,234,216,0.45);
+    margin-top: 0.5mm;
+    font-style: italic;
+    line-height: 1.4;
+  }
+  .item-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 13pt;
+    color: #C9A84C;
+    white-space: nowrap;
+    font-weight: 400;
+    flex-shrink: 0;
+  }
+
+  /* Item destacado */
+  .item.star {
+    background: rgba(201,168,76,0.07);
+    border: 0.5px solid rgba(201,168,76,0.2);
+    padding: 3mm 4mm;
+    margin: 1.5mm 0;
+  }
+  .item.star .item-name { color: #E8C97A; font-weight: 700; font-size: 13pt; }
+  .item.star .item-price { color: #E8C97A; font-size: 14pt; }
+  .item-badge {
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-size: 6pt;
+    letter-spacing: 0.12em;
+    background: rgba(201,168,76,0.12);
+    color: #C9A84C;
+    border: 0.5px solid rgba(201,168,76,0.35);
+    padding: 1px 4px;
+    margin-top: 1.5mm;
+  }
+
+  /* Grid 2 columnas para bebidas */
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5mm;
+    margin: 1mm 0;
+  }
+  .card2 {
+    background: rgba(201,168,76,0.04);
+    border: 0.5px solid rgba(201,168,76,0.15);
+    padding: 3mm 4mm;
+  }
+  .card2 .item-name { font-size: 11pt; }
+  .card2 .item-price { font-size: 12pt; margin-top: 1mm; }
+  .card2 .item-desc { font-size: 8pt; }
+
+  /* Grid 3 col para chupitos */
+  .grid3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2.5mm;
+    margin: 1mm 0;
+  }
+
+  /* Separador decorativo */
+  .sep {
+    display: flex;
+    align-items: center;
+    gap: 4mm;
+    margin: 6mm 0;
+  }
+  .sep-line { flex: 1; height: 0.5px; background: rgba(201,168,76,0.2); }
+  .sep-dot { color: #C9A84C; font-size: 7pt; }
+
+  /* Pie de cada hoja */
+  .page-footer {
+    margin-top: auto;
+    padding-top: 4mm;
+    border-top: 0.5px solid rgba(201,168,76,0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .page-footer-left {
+    font-family: 'Cinzel', serif;
+    font-size: 6.5pt;
+    letter-spacing: 0.15em;
+    color: rgba(201,168,76,0.3);
+  }
+  .page-footer-right {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 7pt;
+    font-style: italic;
+    color: rgba(242,234,216,0.2);
+  }
+
+  /* ── PRINT MEDIA ── */
+  @media print {
+    body { background: #111009; margin: 0; }
+    .page { margin: 0; }
+    @page {
+      size: A4;
+      margin: 0;
+    }
+  }
+
+  /* Screen preview */
+  @media screen {
+    body { padding: 10mm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     HOJA 1 · PORTADA
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="cover">
+    <div class="cover-bg"></div>
+
+    <!-- Lámpara SVG (icono del logo) -->
+    <svg class="cover-lamp" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <line x1="40" y1="0" x2="40" y2="18" stroke="#C9A84C" stroke-width="2.5"/>
+      <ellipse cx="40" cy="26" rx="20" ry="9" fill="#1a1a1a" stroke="#C9A84C" stroke-width="1"/>
+      <path d="M20 26 Q40 56 60 26 Z" fill="#C9A84C" opacity="0.8"/>
+      <!-- destellos -->
+      <line x1="62" y1="18" x2="70" y2="12" stroke="#C9A84C" stroke-width="1.2" opacity="0.6"/>
+      <line x1="18" y1="18" x2="10" y2="12" stroke="#C9A84C" stroke-width="1.2" opacity="0.6"/>
+      <line x1="65" y1="26" x2="74" y2="26" stroke="#C9A84C" stroke-width="1" opacity="0.5"/>
+      <line x1="15" y1="26" x2="6" y2="26" stroke="#C9A84C" stroke-width="1" opacity="0.5"/>
+    </svg>
+
+    <div class="cover-brand">D'ESCALA</div>
+    <div class="cover-sub">Café · Bar</div>
+    <div class="cover-rule"></div>
+    <div class="cover-tagline">Madrid &nbsp;·&nbsp; Perú &nbsp;·&nbsp; Amigos</div>
+
+    <!-- Skyline Madrid texto ornamental -->
+    <div style="margin-top:16mm; width:120mm; height:0.5px; background:linear-gradient(90deg,transparent,rgba(201,168,76,0.3),transparent);"></div>
+
+    <div style="margin-top:12mm; text-align:center;">
+      <div style="font-family:'Cormorant Garamond',serif; font-size:11pt; font-style:italic; color:rgba(201,168,76,0.55); letter-spacing:0.08em; line-height:1.8;">
+        Desayunos &nbsp;·&nbsp; Tapas &nbsp;·&nbsp; Bocadillos<br>
+        Platos &nbsp;·&nbsp; Bebidas &nbsp;·&nbsp; Copas
+      </div>
+    </div>
+
+    <div style="margin-top:20mm; width:80mm; height:0.5px; background:linear-gradient(90deg,transparent,rgba(201,168,76,0.25),transparent);"></div>
+
+    <div class="cover-addr">
+      <strong>Ronda del Sur, 18</strong><br>
+      28053 · Puente Vallecas · Madrid<br>
+      EST. 2026
+    </div>
+
+    <!-- Ornamento inferior -->
+    <div style="position:absolute; bottom:14mm; left:50%; transform:translateX(-50%); font-family:'Cinzel',serif; font-size:7pt; letter-spacing:0.4em; color:rgba(201,168,76,0.25);">SABOR QUE UNE</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     HOJA 2 · DESAYUNOS
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="content-page">
+
+    <div class="page-header">
+      <div class="page-header-brand">D'ESCALA</div>
+      <div class="page-header-dot">✦</div>
+      <div class="page-header-section">Desayunos</div>
+      <div class="page-header-num">2 / 6</div>
+    </div>
+
+    <!-- SECCIÓN DESAYUNOS -->
+    <div class="menu-section">
+      <div class="section-title">☕ Desayunos</div>
+
+      <div class="cat">Cafés &amp; Infusiones</div>
+      <div class="item"><div class="item-left"><div class="item-name">Café Solo</div></div><div class="item-price">1,30 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Café con Leche</div></div><div class="item-price">1,60 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Cortado</div></div><div class="item-price">1,40 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Cappuccino</div></div><div class="item-price">2,20 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Carajillo</div><div class="item-desc">Café con Barceló, Brugal o brandy</div></div><div class="item-price">2,80 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Té o Manzanilla</div></div><div class="item-price">1,50 €</div></div>
+
+      <div class="cat">Pan &amp; Tostadas</div>
+      <div class="item"><div class="item-left"><div class="item-name">Tostada con Aceite y Tomate</div></div><div class="item-price">2,00 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Tostada con Mantequilla y Mermelada</div></div><div class="item-price">2,00 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Tostada con Jamón York</div></div><div class="item-price">2,50 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Tostada con Jamón Serrano</div></div><div class="item-price">3,00 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Media Tostada</div><div class="item-desc">Con aceite y tomate o mantequilla</div></div><div class="item-price">1,20 €</div></div>
+
+      <div class="cat">Desayuno Completo</div>
+      <div class="item star">
+        <div class="item-left">
+          <div class="item-name">Desayuno D'Escala</div>
+          <div class="item-desc">Café (solo o con leche) · tostada a elegir o croissant</div>
+          <span class="item-badge">EL MÁS PEDIDO</span>
+        </div>
+        <div class="item-price">3,50 €</div>
+      </div>
+    </div>
+
+    <div class="sep"><div class="sep-line"></div><div class="sep-dot">✦</div><div class="sep-line"></div></div>
+
+    <!-- SECCIÓN TAPAS en la misma hoja (parte superior) -->
+    <div class="menu-section">
+      <div class="section-title">🍽 Tapas</div>
+
+      <div class="cat">De la Cocina</div>
+      <div class="item"><div class="item-left"><div class="item-name">Croquetas de Jamón</div><div class="item-desc">6 unidades · crujientes y cremosas</div></div><div class="item-price">5,50 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Croquetas de Espinaca y Queso</div><div class="item-desc">6 unidades · queso fundido</div></div><div class="item-price">5,50 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Tortilla de Patata</div><div class="item-desc">A elegir: cuajada o poco hecha</div></div><div class="item-price">3,50 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Calamares</div><div class="item-desc">Anillas rebozadas · salsa tártara y limón</div></div><div class="item-price">6,50 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Boquerones</div><div class="item-desc">En vinagre · aliño madrileño · salsa y limón</div></div><div class="item-price">6,50 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Alitas de Pollo</div><div class="item-desc">6 unidades · patatas rústicas</div></div><div class="item-price">7,50 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Patatas Bravas</div><div class="item-desc">Patatas rústicas caseras</div></div><div class="item-price">5,00 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Tequeños de Queso</div><div class="item-desc">5 unidades</div></div><div class="item-price">6,00 €</div></div>
+    </div>
+
+    <div class="page-footer">
+      <div class="page-footer-left">D'ESCALA CAFÉ · BAR · MADRID</div>
+      <div class="page-footer-right">Ronda del Sur 18, 28053 Madrid</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     HOJA 3 · BOCADILLOS & PLATOS
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="content-page">
+
+    <div class="page-header">
+      <div class="page-header-brand">D'ESCALA</div>
+      <div class="page-header-dot">✦</div>
+      <div class="page-header-section">Bocadillos &amp; Platos</div>
+      <div class="page-header-num">3 / 6</div>
+    </div>
+
+    <!-- BOCADILLOS -->
+    <div class="menu-section">
+      <div class="section-title">🥖 Bocadillos</div>
+
+      <div class="cat">Sándwiches</div>
+      <div class="item"><div class="item-left"><div class="item-name">Sándwich Mixto</div><div class="item-desc">Pan tostado · jamón york · queso fundido</div></div><div class="item-price">3,50 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Sándwich Mixto con Huevo</div><div class="item-desc">Pan tostado · jamón york · queso · huevo a la plancha</div></div><div class="item-price">4,50 €</div></div>
+
+      <div class="cat">Hamburguesa</div>
+      <div class="item star">
+        <div class="item-left">
+          <div class="item-name">Hamburguesa D'Escala</div>
+          <div class="item-desc">Carne 150g · queso cheddar · bacon · lechuga · tomate · mayonesa</div>
+          <span class="item-badge">PATATAS RÚSTICAS INCLUIDAS</span>
+        </div>
+        <div class="item-price">11,00 €</div>
+      </div>
+      <div class="item"><div class="item-left"><div class="item-name">+ Huevo</div></div><div class="item-price">1,00 €</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">+ Cebolla Caramelizada</div></div><div class="item-price">1,00 €</div></div>
+    </div>
+
+    <div class="sep"><div class="sep-line"></div><div class="sep-dot">✦</div><div class="sep-line"></div></div>
+
+    <!-- PLATOS -->
+    <div class="menu-section">
+      <div class="section-title">🍳 Platos Principales</div>
+
+      <div class="item star">
+        <div class="item-left">
+          <div class="item-name">Filete de Pollo</div>
+          <div class="item-desc">Patatas rústicas caseras o arroz · ensalada fresca</div>
+          <span class="item-badge">PLATO COMPLETO</span>
+        </div>
+        <div class="item-price">9,50 €</div>
+      </div>
+      <div class="item star">
+        <div class="item-left">
+          <div class="item-name">Filete de Ternera</div>
+          <div class="item-desc">Patatas rústicas caseras · ensalada fresca</div>
+          <span class="item-badge">PLATO COMPLETO</span>
+        </div>
+        <div class="item-price">11,50 €</div>
+      </div>
+      <div class="item star">
+        <div class="item-left">
+          <div class="item-name">Codillo</div>
+          <div class="item-desc">Salsa de champiñones · verduras de temporada</div>
+          <span class="item-badge">ESPECIALIDAD DE LA CASA</span>
+        </div>
+        <div class="item-price">16,00 €</div>
+      </div>
+    </div>
+
+    <div class="sep"><div class="sep-line"></div><div class="sep-dot">✦</div><div class="sep-line"></div></div>
+
+    <!-- NOTA -->
+    <div style="text-align:center; padding: 5mm 0;">
+      <div style="font-family:'Cormorant Garamond',serif; font-size:9pt; font-style:italic; color:rgba(242,234,216,0.35); letter-spacing:0.08em;">
+        Todos nuestros platos se preparan al momento.<br>
+        Consulta disponibilidad con el personal.
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <div class="page-footer-left">D'ESCALA CAFÉ · BAR · MADRID</div>
+      <div class="page-footer-right">Ronda del Sur 18, 28053 Madrid</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     HOJA 4 · BEBIDAS
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="content-page">
+
+    <div class="page-header">
+      <div class="page-header-brand">D'ESCALA</div>
+      <div class="page-header-dot">✦</div>
+      <div class="page-header-section">Bebidas</div>
+      <div class="page-header-num">4 / 6</div>
+    </div>
+
+    <div class="menu-section">
+      <div class="section-title">🥤 Refrescos &amp; Agua</div>
+
+      <div class="grid2">
+        <div class="card2">
+          <div class="item-name">Coca-Cola / Zero / Fanta</div>
+          <div class="item-price">2,20 €</div>
+        </div>
+        <div class="card2">
+          <div class="item-name">Nestea / Aquarius</div>
+          <div class="item-price">2,20 €</div>
+        </div>
+        <div class="card2">
+          <div class="item-name">Zumo Melocotón / Piña</div>
+          <div class="item-price">2,00 €</div>
+        </div>
+        <div class="card2">
+          <div class="item-name">Bitter Kas</div>
+          <div class="item-desc">20 cl</div>
+          <div class="item-price">2,00 €</div>
+        </div>
+        <div class="card2">
+          <div class="item-name">Schweppes Tónica</div>
+          <div class="item-desc">Original, limón, naranja</div>
+          <div class="item-price">2,30 €</div>
+        </div>
+        <div class="card2">
+          <div class="item-name">Agua Mineral</div>
+          <div class="item-desc">Con o sin gas · 50 cl</div>
+          <div class="item-price">1,50 €</div>
+        </div>
+      </div>
+
+      <div class="cat" style="margin-top:5mm;">Helados</div>
+      <div class="item"><div class="item-left"><div class="item-name">Paleta de Helado Fresky Yogur</div></div><div class="item-price">1,50 €</div></div>
+    </div>
+
+    <div class="sep"><div class="sep-line"></div><div class="sep-dot">✦</div><div class="sep-line"></div></div>
+
+    <div class="menu-section">
+      <div class="section-title">🍺 Cervezas</div>
+
+      <div class="grid2">
+        <div class="card2">
+          <div class="item-name">Estrella Galicia · Caña</div>
+          <div class="item-desc">Cerveza de grifo</div>
+          <div class="item-price">1,80 €</div>
+        </div>
+        <div class="card2">
+          <div class="item-name">Estrella Galicia · Jarra</div>
+          <div class="item-desc">Cerveza de grifo</div>
+          <div class="item-price">2,80 €</div>
+        </div>
+        <div class="card2">
+          <div class="item-name">Mahou · Botellín</div>
+          <div class="item-desc">25 cl · botella</div>
+          <div class="item-price">1,80 €</div>
+        </div>
+        <div class="card2">
+          <div class="item-name">Mahou · Tercio</div>
+          <div class="item-desc">33 cl · botella</div>
+          <div class="item-price">2,80 €</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sep"><div class="sep-line"></div><div class="sep-dot">✦</div><div class="sep-line"></div></div>
+
+    <div class="menu-section">
+      <div class="section-title">🍷 Vinos &amp; Aperitivos</div>
+
+      <div class="cat">Vinos · Copa</div>
+      <div class="grid2">
+        <div class="card2">
+          <div class="item-name">Vino Tinto</div>
+          <div class="item-price">2,50 €</div>
+        </div>
+        <div class="card2">
+          <div class="item-name">Vino Blanco</div>
+          <div class="item-price">2,50 €</div>
+        </div>
+      </div>
+
+      <div class="cat">Vermut &amp; Aperitivos</div>
+      <div class="item">
+        <div class="item-left">
+          <div class="item-name">Vermut Rojo</div>
+          <div class="item-desc">Con aceituna o naranja</div>
+        </div>
+        <div class="item-price">2,80 €</div>
+      </div>
+      <div class="item">
+        <div class="item-left"><div class="item-name">Vermut Blanco</div></div>
+        <div class="item-price">2,80 €</div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <div class="page-footer-left">D'ESCALA CAFÉ · BAR · MADRID</div>
+      <div class="page-footer-right">Ronda del Sur 18, 28053 Madrid</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     HOJA 5 · COPAS
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="content-page">
+
+    <div class="page-header">
+      <div class="page-header-brand">D'ESCALA</div>
+      <div class="page-header-dot">✦</div>
+      <div class="page-header-section">Copas &amp; Combinados</div>
+      <div class="page-header-num">5 / 6</div>
+    </div>
+
+    <div class="menu-section">
+      <div class="section-title">🥃 Copas</div>
+
+      <div class="cat">Ron</div>
+      <div class="grid2">
+        <div class="card2">
+          <div class="item-name">Barceló</div>
+          <div class="item-desc">Ron dominicano</div>
+          <div class="item-price">5,50 €</div>
+        </div>
+        <div class="card2">
+          <div class="item-name">Brugal</div>
+          <div class="item-desc">Ron dominicano</div>
+          <div class="item-price">5,50 €</div>
+        </div>
+        <div class="card2">
+          <div class="item-name">Bacardí Blanco</div>
+          <div class="item-desc">Con cola o limón</div>
+          <div class="item-price">5,50 €</div>
+        </div>
+        <div class="card2">
+          <div class="item-name">Bacardí Limón</div>
+          <div class="item-desc">Con Sprite o soda</div>
+          <div class="item-price">5,50 €</div>
+        </div>
+      </div>
+
+      <div class="cat">Gin &amp; Vodka</div>
+      <div class="grid2">
+        <div class="card2">
+          <div class="item-name">Gin-Tonic</div>
+          <div class="item-desc">Beefeater / Seagram's + tónica</div>
+          <div class="item-price">5,50 €</div>
+        </div>
+        <div class="card2">
+          <div class="item-name">Vodka</div>
+          <div class="item-desc">Absolut / Eristoff con refresco</div>
+          <div class="item-price">5,50 €</div>
+        </div>
+      </div>
+
+      <div class="cat">Whisky &amp; Brandy</div>
+      <div class="grid2">
+        <div class="card2">
+          <div class="item-name">Whisky</div>
+          <div class="item-desc">Ballantine's / J&amp;B con refresco</div>
+          <div class="item-price">5,50 €</div>
+        </div>
+        <div class="card2">
+          <div class="item-name">Brandy</div>
+          <div class="item-desc">Solo o en carajillo</div>
+          <div class="item-price">4,50 €</div>
+        </div>
+      </div>
+
+      <div class="cat">Chupitos</div>
+      <div class="grid3">
+        <div class="card2">
+          <div class="item-name">Jägermeister</div>
+          <div class="item-desc">Muy frío</div>
+          <div class="item-price">2,00 €</div>
+        </div>
+        <div class="card2">
+          <div class="item-name">Licor de Hierbas</div>
+          <div class="item-desc">Macerado</div>
+          <div class="item-price">2,00 €</div>
+        </div>
+        <div class="card2">
+          <div class="item-name">Tequila</div>
+          <div class="item-desc">Con sal y limón</div>
+          <div class="item-price">2,00 €</div>
+        </div>
+      </div>
+
+      <div class="cat">Combinados Especiales</div>
+      <div class="item star">
+        <div class="item-left">
+          <div class="item-name">Combinado con Red Bull</div>
+          <div class="item-desc">Whisky / Vodka / Jäger + Red Bull</div>
+        </div>
+        <div class="item-price">6,50 €</div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <div class="page-footer-left">D'ESCALA CAFÉ · BAR · MADRID</div>
+      <div class="page-footer-right">Ronda del Sur 18, 28053 Madrid</div>
+    </div>
+  </div>
+</div>
+
